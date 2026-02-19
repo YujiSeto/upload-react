@@ -13,8 +13,18 @@ export const Form = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Submit");
+  const handleSubmit = async () => {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile!);
+
+      const req = await fetch("https://httpbin.org/post", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await req.json();
+      console.log(json);
+    }
   };
 
   return (
