@@ -3,14 +3,11 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const Page = () => {
   return (
-    <div className="relative min-h-screen flex justify-center items-center">
-      <div className="absolute top-4 right-4">
+    <div className="relative min-h-screen">
+      <div className="absolute top-4 right-4 z-20">
         <ThemeToggle />
       </div>
-      <div className="">
-        <h1 className="text-3xl font-bold justify-center text-center">Upload</h1>
-        <Form />
-      </div>
+      <Form />
     </div>
   );
 };
