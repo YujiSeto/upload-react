@@ -1,10 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Upload } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 
 export const Form = () => {
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [legendField, setLegendField] = useState("");
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -17,6 +19,7 @@ export const Form = () => {
     if (selectedFile) {
       const formData = new FormData();
       formData.append("file", selectedFile!);
+      formData.append("legend", legendField);
 
       const req = await fetch("https://httpbin.org/post", {
         method: "POST",
@@ -24,13 +27,29 @@ export const Form = () => {
       });
       const json = await req.json();
       console.log(json);
+      alert(`Sucessfully uploaded (${selectedFile!.name}) with legend: ${legendField}`);
     }
   };
 
   return (
-    <div>
-      <input className="block- my-5" type="file" onChange={handleFileChange} />
-      <Button variant="outline" onClick={handleSubmit}>
+    <div className="flex flex-col items-center gap-4 my-5">
+      <input type="file" id="file-upload" onChange={handleFileChange} className="hidden" />
+      <label
+        htmlFor="file-upload"
+        className="flex flex-col items-center gap-2 border-2 border-dashed border-muted text-muted-foreground p-6 rounded-md cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors"
+      >
+        <Upload className="w-8 h-8" />
+        <span>Select a File</span>
+      </label>
+      {selectedFile && <div className="text-m">Selected File: {selectedFile.name}</div>}
+      <input
+        type="text"
+        placeholder="Insert a Legend"
+        value={legendField}
+        onChange={(e) => setLegendField(e.target.value)}
+        className="border-2 p-2 rounded-md text-center"
+      />
+      <Button className="cursor-pointer" variant="outline" onClick={handleSubmit}>
         Send
       </Button>
     </div>

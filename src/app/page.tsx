@@ -8,7 +8,7 @@ const Page = () => {
         <ThemeToggle />
       </div>
       <div className="">
-        <h1 className="text-3xl font-bold">Upload</h1>
+        <h1 className="text-3xl font-bold justify-center text-center">Upload</h1>
         <Form />
       </div>
     </div>
