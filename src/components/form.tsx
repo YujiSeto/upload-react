@@ -19,11 +19,13 @@ export const Form = () => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [legendField, setLegendField] = useState("");
   const [progressUpload, setProgressUpload] = useState(0);
+  const [photoString, setPhotoString] = useState("");
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setSelectedFile(file);
+      setPhotoString(URL.createObjectURL(file));
     }
   };
 
@@ -34,7 +36,6 @@ export const Form = () => {
       formData.append("legend", legendField);
 
       const url = "https://httpbin.org/post";
-
       const req = await axios.post(url, formData, {
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {
@@ -51,14 +52,14 @@ export const Form = () => {
   useEffect(() => {
     if (acceptedFiles.length > 0) {
       setSelectedFile(acceptedFiles[0]);
+      setPhotoString(URL.createObjectURL(acceptedFiles[0]));
+      setProgressUpload(0);
     }
   }, [acceptedFiles]);
 
   return (
     <div
-      className={`fixed inset-0 z-10 flex items-center justify-center ${
-        isDragActive ? "bg-background/80 backdrop-blur-sm" : ""
-      }`}
+      className={`fixed inset-0 z-10 flex items-center justify-center ${isDragActive ? "bg-background/80 backdrop-blur-sm" : ""}`}
       {...getRootProps()}
     >
       <input type="file" id="file-upload" onChange={handleFileChange} className="hidden" {...getInputProps()} />
@@ -84,7 +85,8 @@ export const Form = () => {
             </>
           )}
         </label>
-
+        
+        {photoString && <img src={photoString} className="max-w-80" />}
         {selectedFile && <div className="text-m">Selected File: {selectedFile.name}</div>}
 
         <input
@@ -99,6 +101,7 @@ export const Form = () => {
         </Button>
 
         <div className="w-xl">{progressUpload > 0 && <ProgressBar progress={progressUpload} />}</div>
+        
       </div>
     </div>
   );
